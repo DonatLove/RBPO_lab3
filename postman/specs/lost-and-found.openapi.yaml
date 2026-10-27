@@ -1,0 +1,556 @@
+openapi: 3.0.3
+info:
+  title: Lost and Found API
+  version: 3.0.0
+  description: REST API бюро находок. Состояния предметов, заявлений и претензий изменяются только бизнес-операциями.
+servers:
+  - url: http://localhost:8080
+tags:
+  - name: Users
+  - name: Found items
+  - name: Loss reports
+  - name: Item claims
+  - name: Handover records
+  - name: Business operations
+paths:
+  /api/users:
+    get:
+      tags: [Users]
+      summary: Получить всех пользователей
+      operationId: listUsers
+      responses:
+        '200':
+          description: Список пользователей
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {$ref: '#/components/schemas/User'}
+    post:
+      tags: [Users]
+      summary: Создать пользователя
+      operationId: createUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/UserInput'}
+      responses:
+        '201':
+          description: Пользователь создан
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/User'}
+        '400': {$ref: '#/components/responses/BadRequest'}
+  /api/users/{id}:
+    get:
+      tags: [Users]
+      summary: Получить пользователя
+      operationId: getUser
+      parameters: [{$ref: '#/components/parameters/Id'}]
+      responses:
+        '200': {description: Пользователь, content: {application/json: {schema: {$ref: '#/components/schemas/User'}}}}
+        '404': {$ref: '#/components/responses/NotFound'}
+    patch:
+      tags: [Users]
+      summary: Изменить пользователя
+      operationId: updateUser
+      parameters: [{$ref: '#/components/parameters/Id'}]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/UserPatch'}
+      responses:
+        '200': {description: Пользователь обновлён, content: {application/json: {schema: {$ref: '#/components/schemas/User'}}}}
+        '400': {$ref: '#/components/responses/BadRequest'}
+        '404': {$ref: '#/components/responses/NotFound'}
+    delete:
+      tags: [Users]
+      summary: Удалить пользователя без заявлений
+      operationId: deleteUser
+      parameters: [{$ref: '#/components/parameters/Id'}]
+      responses:
+        '204': {description: Пользователь удалён}
+        '400': {$ref: '#/components/responses/BadRequest'}
+        '404': {$ref: '#/components/responses/NotFound'}
+  /api/found-items:
+    get:
+      tags: [Found items]
+      summary: Получить найденные предметы
+      operationId: listFoundItems
+      responses:
+        '200': {description: Список предметов, content: {application/json: {schema: {type: array, items: {$ref: '#/components/schemas/FoundItem'}}}}}
+    post:
+      tags: [Found items]
+      summary: Зарегистрировать найденный предмет
+      operationId: createFoundItem
+      parameters:
+        - name: location
+          in: query
+          required: true
+          schema: {type: string}
+        - name: status
+          in: query
+          required: false
+          schema: {type: string, enum: [AVAILABLE]}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/FoundItemInput'}
+      responses:
+        '201': {description: Предмет создан, content: {application/json: {schema: {$ref: '#/components/schemas/FoundItem'}}}}
+        '400': {$ref: '#/components/responses/BadRequest'}
+  /api/found-items/{id}:
+    get:
+      tags: [Found items]
+      summary: Получить найденный предмет
+      operationId: getFoundItem
+      parameters: [{$ref: '#/components/parameters/Id'}]
+      responses:
+        '200': {description: Предмет, content: {application/json: {schema: {$ref: '#/components/schemas/FoundItem'}}}}
+        '404': {$ref: '#/components/responses/NotFound'}
+    patch:
+      tags: [Found items]
+      summary: Изменить описание, категорию или место предмета
+      operationId: updateFoundItem
+      parameters:
+        - {$ref: '#/components/parameters/Id'}
+        - name: location
+          in: query
+          schema: {type: string}
+        - name: status
+          in: query
+          schema: {type: string, enum: [AVAILABLE]}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/FoundItemPatch'}
+      responses:
+        '200': {description: Предмет обновлён, content: {application/json: {schema: {$ref: '#/components/schemas/FoundItem'}}}}
+        '400': {$ref: '#/components/responses/BadRequest'}
+        '404': {$ref: '#/components/responses/NotFound'}
+    delete:
+      tags: [Found items]
+      summary: Удалить предмет без претензий
+      operationId: deleteFoundItem
+      parameters: [{$ref: '#/components/parameters/Id'}]
+      responses:
+        '204': {description: Предмет удалён}
+        '400': {$ref: '#/components/responses/BadRequest'}
+        '404': {$ref: '#/components/responses/NotFound'}
+  /api/loss-reports:
+    get:
+      tags: [Loss reports]
+      summary: Получить заявления о пропаже
+      operationId: listLossReports
+      responses:
+        '200': {description: Список заявлений, content: {application/json: {schema: {type: array, items: {$ref: '#/components/schemas/LossReport'}}}}}
+    post:
+      tags: [Loss reports]
+      summary: Создать заявление о пропаже
+      operationId: createLossReport
+      parameters:
+        - name: applicantId
+          in: query
+          required: true
+          schema: {type: integer, format: int64}
+        - name: status
+          in: query
+          schema: {type: string, enum: [OPEN]}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/LossReportInput'}
+      responses:
+        '201': {description: Заявление создано, content: {application/json: {schema: {$ref: '#/components/schemas/LossReport'}}}}
+        '400': {$ref: '#/components/responses/BadRequest'}
+        '404': {$ref: '#/components/responses/NotFound'}
+  /api/loss-reports/{id}:
+    get:
+      tags: [Loss reports]
+      summary: Получить заявление
+      operationId: getLossReport
+      parameters: [{$ref: '#/components/parameters/Id'}]
+      responses:
+        '200': {description: Заявление, content: {application/json: {schema: {$ref: '#/components/schemas/LossReport'}}}}
+        '404': {$ref: '#/components/responses/NotFound'}
+    patch:
+      tags: [Loss reports]
+      summary: Изменить открытое заявление
+      operationId: updateLossReport
+      parameters:
+        - {$ref: '#/components/parameters/Id'}
+        - name: applicantId
+          in: query
+          schema: {type: integer, format: int64}
+        - name: status
+          in: query
+          schema: {type: string, enum: [OPEN]}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/LossReportPatch'}
+      responses:
+        '200': {description: Заявление обновлено, content: {application/json: {schema: {$ref: '#/components/schemas/LossReport'}}}}
+        '400': {$ref: '#/components/responses/BadRequest'}
+        '404': {$ref: '#/components/responses/NotFound'}
+    delete:
+      tags: [Loss reports]
+      summary: Удалить заявление без претензий
+      operationId: deleteLossReport
+      parameters: [{$ref: '#/components/parameters/Id'}]
+      responses:
+        '204': {description: Заявление удалено}
+        '400': {$ref: '#/components/responses/BadRequest'}
+        '404': {$ref: '#/components/responses/NotFound'}
+  /api/item-claims:
+    get:
+      tags: [Item claims]
+      summary: Получить претензии
+      operationId: listItemClaims
+      responses:
+        '200': {description: Список претензий, content: {application/json: {schema: {type: array, items: {$ref: '#/components/schemas/ItemClaim'}}}}}
+    post:
+      tags: [Item claims]
+      summary: Создать претензию в статусе PENDING
+      operationId: createItemClaim
+      parameters:
+        - name: lossReportId
+          in: query
+          required: true
+          schema: {type: integer, format: int64}
+        - name: foundItemId
+          in: query
+          required: true
+          schema: {type: integer, format: int64}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/ItemClaimInput'}
+      responses:
+        '201': {description: Претензия создана, content: {application/json: {schema: {$ref: '#/components/schemas/ItemClaim'}}}}
+        '400': {$ref: '#/components/responses/BadRequest'}
+        '404': {$ref: '#/components/responses/NotFound'}
+  /api/item-claims/{id}:
+    get:
+      tags: [Item claims]
+      summary: Получить претензию
+      operationId: getItemClaim
+      parameters: [{$ref: '#/components/parameters/Id'}]
+      responses:
+        '200': {description: Претензия, content: {application/json: {schema: {$ref: '#/components/schemas/ItemClaim'}}}}
+        '404': {$ref: '#/components/responses/NotFound'}
+    patch:
+      tags: [Item claims]
+      summary: Изменить претензию PENDING
+      operationId: updateItemClaim
+      parameters:
+        - {$ref: '#/components/parameters/Id'}
+        - name: lossReportId
+          in: query
+          schema: {type: integer, format: int64}
+        - name: foundItemId
+          in: query
+          schema: {type: integer, format: int64}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/ItemClaimPatch'}
+      responses:
+        '200': {description: Претензия обновлена, content: {application/json: {schema: {$ref: '#/components/schemas/ItemClaim'}}}}
+        '400': {$ref: '#/components/responses/BadRequest'}
+        '404': {$ref: '#/components/responses/NotFound'}
+    delete:
+      tags: [Item claims]
+      summary: Удалить претензию PENDING без акта
+      operationId: deleteItemClaim
+      parameters: [{$ref: '#/components/parameters/Id'}]
+      responses:
+        '204': {description: Претензия удалена}
+        '400': {$ref: '#/components/responses/BadRequest'}
+        '404': {$ref: '#/components/responses/NotFound'}
+  /api/handover-records:
+    get:
+      tags: [Handover records]
+      summary: Получить акты передачи
+      operationId: listHandoverRecords
+      responses:
+        '200': {description: Список актов, content: {application/json: {schema: {type: array, items: {$ref: '#/components/schemas/HandoverRecord'}}}}}
+    post:
+      tags: [Handover records]
+      summary: Создать черновик акта для одобренной претензии
+      operationId: createHandoverRecord
+      parameters:
+        - name: itemClaimId
+          in: query
+          required: true
+          schema: {type: integer, format: int64}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/HandoverRecordInput'}
+      responses:
+        '201': {description: Черновик акта создан, content: {application/json: {schema: {$ref: '#/components/schemas/HandoverRecord'}}}}
+        '400': {$ref: '#/components/responses/BadRequest'}
+        '404': {$ref: '#/components/responses/NotFound'}
+  /api/handover-records/{id}:
+    get:
+      tags: [Handover records]
+      summary: Получить акт передачи
+      operationId: getHandoverRecord
+      parameters: [{$ref: '#/components/parameters/Id'}]
+      responses:
+        '200': {description: Акт, content: {application/json: {schema: {$ref: '#/components/schemas/HandoverRecord'}}}}
+        '404': {$ref: '#/components/responses/NotFound'}
+    patch:
+      tags: [Handover records]
+      summary: Изменить черновик акта
+      operationId: updateHandoverRecord
+      parameters:
+        - {$ref: '#/components/parameters/Id'}
+        - name: itemClaimId
+          in: query
+          schema: {type: integer, format: int64}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/HandoverRecordInput'}
+      responses:
+        '200': {description: Черновик акта обновлён, content: {application/json: {schema: {$ref: '#/components/schemas/HandoverRecord'}}}}
+        '400': {$ref: '#/components/responses/BadRequest'}
+        '404': {$ref: '#/components/responses/NotFound'}
+    delete:
+      tags: [Handover records]
+      summary: Удалить черновик акта
+      operationId: deleteHandoverRecord
+      parameters: [{$ref: '#/components/parameters/Id'}]
+      responses:
+        '204': {description: Черновик удалён}
+        '400': {$ref: '#/components/responses/BadRequest'}
+        '404': {$ref: '#/components/responses/NotFound'}
+  /api/business/claims/{claimId}/approve:
+    post:
+      tags: [Business operations]
+      summary: Одобрить претензию и зарезервировать предмет
+      operationId: approveClaim
+      parameters:
+        - name: claimId
+          in: path
+          required: true
+          schema: {type: integer, format: int64}
+      responses:
+        '200': {$ref: '#/components/responses/BusinessResult'}
+        '400': {$ref: '#/components/responses/BadRequest'}
+        '404': {$ref: '#/components/responses/NotFound'}
+  /api/business/claims/{claimId}/reject:
+    post:
+      tags: [Business operations]
+      summary: Отклонить претензию PENDING
+      operationId: rejectClaim
+      parameters:
+        - name: claimId
+          in: path
+          required: true
+          schema: {type: integer, format: int64}
+      responses:
+        '200': {$ref: '#/components/responses/BusinessResult'}
+        '400': {$ref: '#/components/responses/BadRequest'}
+        '404': {$ref: '#/components/responses/NotFound'}
+  /api/business/claims/{claimId}/cancel:
+    post:
+      tags: [Business operations]
+      summary: Отменить претензию; одобренный предмет снова станет доступным
+      operationId: cancelClaim
+      parameters:
+        - name: claimId
+          in: path
+          required: true
+          schema: {type: integer, format: int64}
+      responses:
+        '200': {$ref: '#/components/responses/BusinessResult'}
+        '400': {$ref: '#/components/responses/BadRequest'}
+        '404': {$ref: '#/components/responses/NotFound'}
+  /api/business/claims/{claimId}/handover:
+    post:
+      tags: [Business operations]
+      summary: Подтвердить передачу предмета по одобренной претензии
+      operationId: handoverItem
+      parameters:
+        - name: claimId
+          in: path
+          required: true
+          schema: {type: integer, format: int64}
+      responses:
+        '200': {$ref: '#/components/responses/BusinessResult'}
+        '400': {$ref: '#/components/responses/BadRequest'}
+        '404': {$ref: '#/components/responses/NotFound'}
+  /api/business/loss-reports/{lossReportId}/close-without-match:
+    post:
+      tags: [Business operations]
+      summary: Закрыть заявление без совпадения и отклонить все претензии PENDING
+      operationId: closeWithoutMatch
+      parameters:
+        - name: lossReportId
+          in: path
+          required: true
+          schema: {type: integer, format: int64}
+      responses:
+        '200': {$ref: '#/components/responses/BusinessResult'}
+        '400': {$ref: '#/components/responses/BadRequest'}
+        '404': {$ref: '#/components/responses/NotFound'}
+  /api/static-html:
+    post:
+      tags: [Business operations]
+      summary: Вернуть статическую HTML-страницу
+      operationId: staticHtmlPost
+      responses:
+        '200': {description: HTML-страница, content: {text/html: {schema: {type: string}}}}
+    put:
+      tags: [Business operations]
+      summary: Вернуть статическую HTML-страницу
+      operationId: staticHtmlPut
+      responses:
+        '200': {description: HTML-страница, content: {text/html: {schema: {type: string}}}}
+components:
+  parameters:
+    Id:
+      name: id
+      in: path
+      required: true
+      schema: {type: integer, format: int64}
+  responses:
+    BadRequest:
+      description: Нарушено правило предметной области или переданы некорректные данные
+      content:
+        application/json:
+          schema: {$ref: '#/components/schemas/Error'}
+    NotFound:
+      description: Сущность не найдена
+      content:
+        application/json:
+          schema: {$ref: '#/components/schemas/Error'}
+    BusinessResult:
+      description: Бизнес-операция выполнена атомарно
+      content:
+        application/json:
+          schema: {$ref: '#/components/schemas/BusinessOperationResult'}
+  schemas:
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error: {type: string}
+    UserInput:
+      type: object
+      required: [fullName, contactDetails]
+      properties:
+        fullName: {type: string, minLength: 1}
+        contactDetails: {type: string, minLength: 1}
+    UserPatch:
+      type: object
+      properties:
+        fullName: {type: string, minLength: 1}
+        contactDetails: {type: string, minLength: 1}
+    User:
+      allOf:
+        - {$ref: '#/components/schemas/UserInput'}
+        - type: object
+          required: [id]
+          properties: {id: {type: integer, format: int64}}
+    FoundItemInput:
+      type: object
+      required: [description, category]
+      properties:
+        description: {type: string, minLength: 1}
+        category: {type: string, minLength: 1}
+    FoundItemPatch:
+      type: object
+      properties:
+        description: {type: string, minLength: 1}
+        category: {type: string, minLength: 1}
+    FoundItem:
+      allOf:
+        - {$ref: '#/components/schemas/FoundItemInput'}
+        - type: object
+          required: [id, location, status]
+          properties:
+            id: {type: integer, format: int64}
+            location: {type: string}
+            status: {type: string, enum: [AVAILABLE, RESERVED, HANDED_OVER]}
+    LossReportInput:
+      type: object
+      required: [description, category]
+      properties:
+        description: {type: string, minLength: 1}
+        category: {type: string, minLength: 1}
+    LossReportPatch:
+      type: object
+      properties:
+        description: {type: string, minLength: 1}
+        category: {type: string, minLength: 1}
+    LossReport:
+      allOf:
+        - {$ref: '#/components/schemas/LossReportInput'}
+        - type: object
+          required: [id, applicant, status]
+          properties:
+            id: {type: integer, format: int64}
+            applicant: {$ref: '#/components/schemas/User'}
+            status: {type: string, enum: [OPEN, MATCHED, CLOSED, CLOSED_UNMATCHED]}
+    ItemClaimInput:
+      type: object
+      required: [evidence]
+      properties:
+        evidence: {type: string, minLength: 1}
+        status: {type: string, enum: [PENDING]}
+    ItemClaimPatch:
+      type: object
+      properties:
+        evidence: {type: string, minLength: 1}
+        status: {type: string, enum: [PENDING]}
+    ItemClaim:
+      allOf:
+        - {$ref: '#/components/schemas/ItemClaimInput'}
+        - type: object
+          required: [id, lossReport, foundItem, status]
+          properties:
+            id: {type: integer, format: int64}
+            lossReport: {$ref: '#/components/schemas/LossReport'}
+            foundItem: {$ref: '#/components/schemas/FoundItem'}
+            status: {type: string, enum: [PENDING, APPROVED, REJECTED, CANCELLED, HANDED_OVER]}
+    HandoverRecordInput:
+      type: object
+      properties:
+        confirmed: {type: boolean, enum: [false]}
+    HandoverRecord:
+      type: object
+      required: [id, itemClaim, handoverTime, confirmed]
+      properties:
+        id: {type: integer, format: int64}
+        itemClaim: {$ref: '#/components/schemas/ItemClaim'}
+        handoverTime: {type: string, format: date-time}
+        confirmed: {type: boolean}
+    BusinessOperationResult:
+      type: object
+      required: [operation, affectedClaimIds]
+      properties:
+        operation: {type: string}
+        claimId: {type: integer, format: int64, nullable: true}
+        claimStatus: {type: string, nullable: true}
+        foundItemId: {type: integer, format: int64, nullable: true}
+        foundItemStatus: {type: string, nullable: true}
+        lossReportId: {type: integer, format: int64, nullable: true}
+        lossReportStatus: {type: string, nullable: true}
+        handoverRecordId: {type: integer, format: int64, nullable: true}
+        affectedClaimIds:
+          type: array
+          items: {type: integer, format: int64}

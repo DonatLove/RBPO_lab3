@@ -1,0 +1,1633 @@
+{
+  "info": {
+    "_postman_id": "f6b4f7a2-1e63-4a88-8ef8-anna-lab3",
+    "name": "Lost and Found API — Anna Lab 3",
+    "description": "Лабораторная работа №3. CRUD для пяти сущностей и пять транзакционных бизнес-операций. Импортируйте вместе с Local.postman_environment.json. Для сценария запускайте папку End-to-end scenario целиком.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "CRUD",
+      "item": [
+        {
+          "name": "Users",
+          "item": [
+            {
+              "name": "GET all Users",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/users",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "users"
+                  ]
+                },
+                "description": ""
+              }
+            },
+            {
+              "name": "GET Users by ID",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/users/{{userId}}",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "users",
+                    "{{usersId}}"
+                  ]
+                },
+                "description": ""
+              }
+            },
+            {
+              "name": "Create Users",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/users",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "users"
+                  ]
+                },
+                "description": "",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"fullName\": \"Тестовый пользователь\",\n  \"contactDetails\": \"test@example.com\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Created', function () { pm.response.to.have.status(201); });",
+                      "if (pm.response.code === 201) { pm.environment.set('userId', pm.response.json().id); }"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Update Users",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/users/{{userId}}",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "users",
+                    "{{usersId}}"
+                  ]
+                },
+                "description": "",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"fullName\": \"Обновлённое имя\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "name": "Delete Users",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/users/{{userId}}",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "users",
+                    "{{usersId}}"
+                  ]
+                },
+                "description": ""
+              }
+            }
+          ]
+        },
+        {
+          "name": "Found items",
+          "item": [
+            {
+              "name": "GET all Found items",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/found-items",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "found-items"
+                  ]
+                },
+                "description": ""
+              }
+            },
+            {
+              "name": "GET Found items by ID",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/found-items/{{foundItemId}}",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "found-items",
+                    "{{foundItemId}}"
+                  ]
+                },
+                "description": ""
+              }
+            },
+            {
+              "name": "Create Found items",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/found-items?location={{location}}",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "found-items"
+                  ],
+                  "query": [
+                    {
+                      "key": "location",
+                      "value": "{{location}}"
+                    }
+                  ]
+                },
+                "description": "",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"description\": \"Чёрный зонт\",\n  \"category\": \"Аксессуары\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Created', function () { pm.response.to.have.status(201); });",
+                      "if (pm.response.code === 201) { pm.environment.set('foundItemId', pm.response.json().id); }"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Update Found items",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/found-items/{{foundItemId}}",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "found-items",
+                    "{{foundItemId}}"
+                  ]
+                },
+                "description": "",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"description\": \"Чёрный зонт с деревянной ручкой\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "name": "Delete Found items",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/found-items/{{foundItemId}}",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "found-items",
+                    "{{foundItemId}}"
+                  ]
+                },
+                "description": ""
+              }
+            }
+          ]
+        },
+        {
+          "name": "Loss reports",
+          "item": [
+            {
+              "name": "GET all Loss reports",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/loss-reports",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "loss-reports"
+                  ]
+                },
+                "description": ""
+              }
+            },
+            {
+              "name": "GET Loss reports by ID",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/loss-reports/{{lossReportId}}",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "loss-reports",
+                    "{{lossReportId}}"
+                  ]
+                },
+                "description": ""
+              }
+            },
+            {
+              "name": "Create Loss reports",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/loss-reports?applicantId={{userId}}",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "loss-reports"
+                  ],
+                  "query": [
+                    {
+                      "key": "applicantId",
+                      "value": "{{userId}}"
+                    }
+                  ]
+                },
+                "description": "",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"description\": \"Потерян чёрный зонт\",\n  \"category\": \"Аксессуары\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Created', function () { pm.response.to.have.status(201); });",
+                      "if (pm.response.code === 201) { pm.environment.set('lossReportId', pm.response.json().id); }"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Update Loss reports",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/loss-reports/{{lossReportId}}",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "loss-reports",
+                    "{{lossReportId}}"
+                  ]
+                },
+                "description": "",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"description\": \"Потерян чёрный зонт с деревянной ручкой\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "name": "Delete Loss reports",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/loss-reports/{{lossReportId}}",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "loss-reports",
+                    "{{lossReportId}}"
+                  ]
+                },
+                "description": ""
+              }
+            }
+          ]
+        },
+        {
+          "name": "Item claims",
+          "item": [
+            {
+              "name": "GET all Item claims",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/item-claims",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "item-claims"
+                  ]
+                },
+                "description": ""
+              }
+            },
+            {
+              "name": "GET Item claims by ID",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/item-claims/{{itemClaimId}}",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "item-claims",
+                    "{{itemClaimId}}"
+                  ]
+                },
+                "description": ""
+              }
+            },
+            {
+              "name": "Create Item claims",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/item-claims?lossReportId={{lossReportId}}&foundItemId={{foundItemId}}",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "item-claims"
+                  ],
+                  "query": [
+                    {
+                      "key": "lossReportId",
+                      "value": "{{lossReportId}}"
+                    },
+                    {
+                      "key": "foundItemId",
+                      "value": "{{foundItemId}}"
+                    }
+                  ]
+                },
+                "description": "",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"evidence\": \"Описание и фотография предмета\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Created', function () { pm.response.to.have.status(201); });",
+                      "if (pm.response.code === 201) { pm.environment.set('itemClaimId', pm.response.json().id); }"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Update Item claims",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/item-claims/{{itemClaimId}}",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "item-claims",
+                    "{{itemClaimId}}"
+                  ]
+                },
+                "description": "",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"evidence\": \"Дополнительное описание предмета\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "name": "Delete Item claims",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/item-claims/{{itemClaimId}}",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "item-claims",
+                    "{{itemClaimId}}"
+                  ]
+                },
+                "description": ""
+              }
+            }
+          ]
+        },
+        {
+          "name": "Handover records",
+          "item": [
+            {
+              "name": "GET all Handover records",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/handover-records",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "handover-records"
+                  ]
+                },
+                "description": ""
+              }
+            },
+            {
+              "name": "GET Handover records by ID",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/handover-records/{{handoverRecordId}}",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "handover-records",
+                    "{{handoverRecordId}}"
+                  ]
+                },
+                "description": ""
+              }
+            },
+            {
+              "name": "Create Handover records",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/handover-records?itemClaimId={{itemClaimId}}",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "handover-records"
+                  ],
+                  "query": [
+                    {
+                      "key": "itemClaimId",
+                      "value": "{{itemClaimId}}"
+                    }
+                  ]
+                },
+                "description": "",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"confirmed\": false\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Created', function () { pm.response.to.have.status(201); });",
+                      "if (pm.response.code === 201) { pm.environment.set('handoverRecordId', pm.response.json().id); }"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Update Handover records",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/handover-records/{{handoverRecordId}}",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "handover-records",
+                    "{{handoverRecordId}}"
+                  ]
+                },
+                "description": "",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"confirmed\": false\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "name": "Delete Handover records",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/handover-records/{{handoverRecordId}}",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "handover-records",
+                    "{{handoverRecordId}}"
+                  ]
+                },
+                "description": ""
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Business operations",
+      "item": [
+        {
+          "name": "Approve claim",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/business/claims/{{itemClaimId}}/approve",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "business",
+                "claims",
+                "{{itemClaimId}}",
+                "approve"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "Reject claim",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/business/claims/{{itemClaimId}}/reject",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "business",
+                "claims",
+                "{{itemClaimId}}",
+                "reject"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "Cancel claim",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/business/claims/{{itemClaimId}}/cancel",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "business",
+                "claims",
+                "{{itemClaimId}}",
+                "cancel"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "Handover item",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/business/claims/{{itemClaimId}}/handover",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "business",
+                "claims",
+                "{{itemClaimId}}",
+                "handover"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "Close report without match",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/business/loss-reports/{{lossReportId}}/close-without-match",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "business",
+                "loss-reports",
+                "{{lossReportId}}",
+                "close-without-match"
+              ]
+            },
+            "description": ""
+          }
+        }
+      ]
+    },
+    {
+      "name": "End-to-end scenario",
+      "description": "Запускайте запросы по порядку. Скрипты сохраняют ID созданных объектов в выбранном окружении.",
+      "item": [
+        {
+          "name": "01 Create user",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "users"
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Анна Иванова\",\n  \"contactDetails\": \"anna.scenario@example.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('User created', () => pm.response.to.have.status(201)); if (pm.response.code === 201) pm.environment.set('userId', pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "02 Create found item for handover",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/found-items?location={{location}}",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "found-items"
+              ],
+              "query": [
+                {
+                  "key": "location",
+                  "value": "{{location}}"
+                }
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Чёрный зонт с деревянной ручкой\",\n  \"category\": \"Аксессуары\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Found item created', () => pm.response.to.have.status(201)); if (pm.response.code === 201) pm.environment.set('foundItemId', pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "03 Create loss report for handover",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/loss-reports?applicantId={{userId}}",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "loss-reports"
+              ],
+              "query": [
+                {
+                  "key": "applicantId",
+                  "value": "{{userId}}"
+                }
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Потерян чёрный зонт с деревянной ручкой\",\n  \"category\": \"Аксессуары\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Loss report created', () => pm.response.to.have.status(201)); if (pm.response.code === 201) pm.environment.set('lossReportId', pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "04 Create claim for handover",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/item-claims?lossReportId={{lossReportId}}&foundItemId={{foundItemId}}",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "item-claims"
+              ],
+              "query": [
+                {
+                  "key": "lossReportId",
+                  "value": "{{lossReportId}}"
+                },
+                {
+                  "key": "foundItemId",
+                  "value": "{{foundItemId}}"
+                }
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"evidence\": \"Совпадает описание деревянной ручки\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Claim created', () => pm.response.to.have.status(201)); if (pm.response.code === 201) pm.environment.set('itemClaimId', pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "05 Approve claim (3 entities)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/business/claims/{{itemClaimId}}/approve",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "business",
+                "claims",
+                "{{itemClaimId}}",
+                "approve"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Claim approved', () => pm.response.to.have.status(200)); pm.test('Related states changed', () => { const j=pm.response.json(); pm.expect(j.claimStatus).to.eql('APPROVED'); pm.expect(j.foundItemStatus).to.eql('RESERVED'); pm.expect(j.lossReportStatus).to.eql('MATCHED'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "06 Handover item (3 entities + act)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/business/claims/{{itemClaimId}}/handover",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "business",
+                "claims",
+                "{{itemClaimId}}",
+                "handover"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Handover completed', () => pm.response.to.have.status(200)); pm.test('All statuses closed', () => { const j=pm.response.json(); pm.expect(j.claimStatus).to.eql('HANDED_OVER'); pm.expect(j.foundItemStatus).to.eql('HANDED_OVER'); pm.expect(j.lossReportStatus).to.eql('CLOSED'); pm.expect(j.handoverRecordId).to.be.a('number'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "07 Create second found item",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/found-items?location={{location}}",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "found-items"
+              ],
+              "query": [
+                {
+                  "key": "location",
+                  "value": "{{location}}"
+                }
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Серый шарф\",\n  \"category\": \"Аксессуары\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) pm.environment.set('foundItem2Id', pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "08 Create second loss report",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/loss-reports?applicantId={{userId}}",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "loss-reports"
+              ],
+              "query": [
+                {
+                  "key": "applicantId",
+                  "value": "{{userId}}"
+                }
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Потерян серый шарф\",\n  \"category\": \"Аксессуары\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) pm.environment.set('lossReport2Id', pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "09 Create claim to cancel",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/item-claims?lossReportId={{lossReport2Id}}&foundItemId={{foundItem2Id}}",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "item-claims"
+              ],
+              "query": [
+                {
+                  "key": "lossReportId",
+                  "value": "{{lossReport2Id}}"
+                },
+                {
+                  "key": "foundItemId",
+                  "value": "{{foundItem2Id}}"
+                }
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"evidence\": \"Узор и длина совпадают\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) pm.environment.set('itemClaim2Id', pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "10 Approve second claim",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/business/claims/{{itemClaim2Id}}/approve",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "business",
+                "claims",
+                "{{itemClaim2Id}}",
+                "approve"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "11 Cancel approved claim (reopens related entities)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/business/claims/{{itemClaim2Id}}/cancel",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "business",
+                "claims",
+                "{{itemClaim2Id}}",
+                "cancel"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Cancelled and reopened', () => { pm.response.to.have.status(200); const j=pm.response.json(); pm.expect(j.claimStatus).to.eql('CANCELLED'); pm.expect(j.foundItemStatus).to.eql('AVAILABLE'); pm.expect(j.lossReportStatus).to.eql('OPEN'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "12 Create third found item",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/found-items?location={{location}}",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "found-items"
+              ],
+              "query": [
+                {
+                  "key": "location",
+                  "value": "{{location}}"
+                }
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Красные перчатки\",\n  \"category\": \"Аксессуары\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) pm.environment.set('foundItem3Id', pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "13 Create claim to reject",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/item-claims?lossReportId={{lossReport2Id}}&foundItemId={{foundItem3Id}}",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "item-claims"
+              ],
+              "query": [
+                {
+                  "key": "lossReportId",
+                  "value": "{{lossReport2Id}}"
+                },
+                {
+                  "key": "foundItemId",
+                  "value": "{{foundItem3Id}}"
+                }
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"evidence\": \"Красная нить на манжете\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) pm.environment.set('itemClaim3Id', pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "14 Reject pending claim",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/business/claims/{{itemClaim3Id}}/reject",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "business",
+                "claims",
+                "{{itemClaim3Id}}",
+                "reject"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Claim rejected', () => { pm.response.to.have.status(200); pm.expect(pm.response.json().claimStatus).to.eql('REJECTED'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "15 Create fourth found item",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/found-items?location={{location}}",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "found-items"
+              ],
+              "query": [
+                {
+                  "key": "location",
+                  "value": "{{location}}"
+                }
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Кожаный ремень\",\n  \"category\": \"Аксессуары\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) pm.environment.set('foundItem4Id', pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "16 Create claim for unmatched closure",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/item-claims?lossReportId={{lossReport2Id}}&foundItemId={{foundItem4Id}}",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "item-claims"
+              ],
+              "query": [
+                {
+                  "key": "lossReportId",
+                  "value": "{{lossReport2Id}}"
+                },
+                {
+                  "key": "foundItemId",
+                  "value": "{{foundItem4Id}}"
+                }
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"evidence\": \"Описание пряжки\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) pm.environment.set('itemClaim4Id', pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "17 Close loss report without match",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/business/loss-reports/{{lossReport2Id}}/close-without-match",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "business",
+                "loss-reports",
+                "{{lossReport2Id}}",
+                "close-without-match"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Report closed without match', () => { pm.response.to.have.status(200); const j=pm.response.json(); pm.expect(j.lossReportStatus).to.eql('CLOSED_UNMATCHED'); pm.expect(j.affectedClaimIds).to.include(Number(pm.environment.get('itemClaim4Id'))); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    }
+  ]
+}

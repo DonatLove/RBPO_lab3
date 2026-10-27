@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:lost_and_found_test;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: create-drop
+  sql:
+    init:
+      mode: never
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+
+application:
+  name: lost-and-found-service-test
+  description: Тестовые настройки REST API бюро находок
+  version: 3.0.0
