@@ -1,0 +1,22 @@
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!.mvn/wrapper/maven-wrapper.properties
+
+### IntelliJ IDEA ###
+.idea/
+*.iml
+*.iws
+*.ipr
+
+### OS and editor files ###
+.DS_Store
+.vscode/
+
+### Laboratory context files ###
+AGENTS.md
+prompt.md
+
+# Local secrets / environment overrides
+.env
+.env.*
+!.env.example
